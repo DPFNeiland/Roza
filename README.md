@@ -1,2 +1,2 @@
 # Roza
-## Uma IA para auxiliar alguns processos envolvendo pesquisa e programação
+## Uma pequena aplicação para gerar workspaces de diversos arquivos para maior produtividade

@@ -1,4 +1,5 @@
 import commands
+from actions.shortcuts import create_shortcut
 
 while True:
     user = input(">>> ").lower()
@@ -6,18 +7,16 @@ while True:
     if user in ["exit", "quit"]:
         break
 
-    found = False
+    if user.startswith("create shortcut"):
+            name = user.replace("create shortcut", "").strip()
+            create_shortcut(name)
+            
+            continue
+    
 
     for keys, func in commands.commands.items():
-        if any(k in user for k in keys):
+        if any(k in user.split() for k in keys):
             func()
-            found = True
             break
-
-    if not found:
-        if user.startswith("search"):
-            query = user.replace("search", "").strip()
-            from executables import search
-            search(query)
-        else:
-            print("Unknown command")
+    else:
+        print("Unknown command")
