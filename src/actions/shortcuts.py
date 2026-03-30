@@ -19,11 +19,10 @@ def create_bat(name, commands):
     desktop = get_desktop()
     bat_path = os.path.join(desktop, f"{name}.bat")
 
-    if not os.path.exists(bat_path):
-        with open(bat_path, "w") as f:
-            f.write("\n".join(commands))
+    with open(bat_path, "w") as f:  # always overwrite
+        f.write("\n".join(commands))
 
-        os.system(f'attrib +h "{bat_path}"')
+    os.system(f'attrib +h "{bat_path}"')
 
     return bat_path
 
@@ -42,13 +41,16 @@ def create_lnk(name, bat_path, icon_path=None):
     shortcut.WorkingDirectory = desktop
 
     if icon_path:
-        base_dir = os.path.dirname(os.path.dirname(__file__))  
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         full_icon_path = os.path.join(base_dir, icon_path)
 
+        full_icon_path = os.path.abspath(full_icon_path)
+
         if os.path.exists(full_icon_path):
-            shortcut.IconLocation = full_icon_path
+            shortcut.IconLocation = full_icon_path + ",0"
+            print("ICON OK:", full_icon_path)
         else:
-            print("!!! Icon not found:", full_icon_path)
+            print("❌ Icon not found:", full_icon_path)
 
     shortcut.save()
 
@@ -76,7 +78,7 @@ def create_shortcut(name):
 
     bat_path = create_bat(name, presets[name])
 
-    icon_path = r"imgs\icon.ico"
+    icon_path = "imgs/icon.ico"
 
     create_lnk(name, bat_path, icon_path)
 
